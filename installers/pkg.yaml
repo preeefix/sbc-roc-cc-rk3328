@@ -1,7 +1,7 @@
-name: sbc-board
+name: sbc-roc-cc-rk3328
 variant: scratch
 dependencies:
-  - stage: board
+  - stage: roc-cc-rk3328
   - stage: u-boot
     platform: linux/arm64
   - stage: profiles

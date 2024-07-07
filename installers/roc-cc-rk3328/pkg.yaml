@@ -1,4 +1,4 @@
-name: board
+name: roc-cc-rk3328
 variant: scratch
 shell: /toolchain/bin/bash
 dependencies:
@@ -14,12 +14,12 @@ steps:
         export PATH=${PATH}:${TOOLCHAIN}/go/bin
 
         cd /pkg/src
-        CGO_ENABLED=0 go build -o ./board .
+        CGO_ENABLED=0 go build -o ./roc-cc-rk3328 .
     install:
       - |
         mkdir -p /rootfs/installers/
 
-        cp -p /pkg/src/board /rootfs/installers/board
+        cp -p /pkg/src/roc-cc-rk3328 /rootfs/installers/roc-cc-rk3328
 finalize:
   - from: /rootfs
     to: /rootfs

@@ -6,6 +6,7 @@ package main
 
 import (
 	_ "embed"
+	// "os"
 	"path/filepath"
 
 	"github.com/siderolabs/go-copy/copy"
@@ -13,18 +14,22 @@ import (
 	"github.com/siderolabs/talos/pkg/machinery/overlay/adapter"
 )
 
+const (
+	dtb       = "rockchip/rk3328-roc-cc.dtb"
+)
+
 func main() {
-	adapter.Execute(&BoardInstaller{})
+	adapter.Execute(&RocCcRk3328Installer{})
 }
 
-type BoardInstaller struct{}
+type RocCcRk3328Installer struct{}
 
-type boardExtraOptions struct {
+type RocCcRk3328ExtraOptions struct {
 	Console    []string `json:"console"`
 	ConfigFile string   `json:"configFile"`
 }
 
-func (i *BoardInstaller) GetOptions(extra boardExtraOptions) (overlay.Options, error) {
+func (i *RocCcRk3328Installer) GetOptions(extra RocCcRk3328ExtraOptions) (overlay.Options, error) {
 	kernelArgs := []string{
 		"console=tty0",
 		"sysctl.kernel.kexec_load_disabled=1",
@@ -34,12 +39,12 @@ func (i *BoardInstaller) GetOptions(extra boardExtraOptions) (overlay.Options, e
 	kernelArgs = append(kernelArgs, extra.Console...)
 
 	return overlay.Options{
-		Name:       "board",
+		Name:       "roc-cc-rk3328",
 		KernelArgs: kernelArgs,
 	}, nil
 }
 
-func (i *BoardInstaller) Install(options overlay.InstallOptions[boardExtraOptions]) error {
+func (i *RocCcRk3328Installer) Install(options overlay.InstallOptions[RocCcRk3328ExtraOptions]) error {
 	// allows to copy a directory from the overlay to the target
 	// err := copy.Dir(filepath.Join(options.ArtifactsPath, "arm64/firmware/boot"), filepath.Join(options.MountPrefix, "/boot/EFI"))
 	// if err != nil {
@@ -47,7 +52,7 @@ func (i *BoardInstaller) Install(options overlay.InstallOptions[boardExtraOption
 	// }
 
 	// allows to copy a file from the overlay to the target
-	err := copy.File(filepath.Join(options.ArtifactsPath, "arm64/u-boot/board/u-boot.bin"), filepath.Join(options.MountPrefix, "/boot/EFI/u-boot.bin"))
+	err := copy.File(filepath.Join(options.ArtifactsPath, "arm64/u-boot/RocCcRk3328/u-boot.bin"), filepath.Join(options.MountPrefix, "/boot/EFI/u-boot.bin"))
 	if err != nil {
 		return err
 	}
@@ -57,4 +62,19 @@ func (i *BoardInstaller) Install(options overlay.InstallOptions[boardExtraOption
 	}
 
 	return nil
+	// var f *os.File
+	// err = f.Sync()
+	// if err != nil {
+	// 	return err
+	// }
+
+	// src := filepath.Join(options.ArtifactsPath, "arm64/dtb", dtb)
+	// dst := filepath.Join(options.MountPrefix, "/boot/EFI/dtb", dtb)
+
+	// err = os.MkdirAll(filepath.Dir(dst), 0o600)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// return copy.File(src, dst)
 }

@@ -24,14 +24,14 @@ steps:
 
         tar xf u-boot.tar.bz2 --strip-components=1
       - |
-        make board_defconfig
+        make roc-cc-rk3328_defconfig
     build:
       - |
         make -j $(nproc) HOSTLDLIBS_mkimage="-lssl -lcrypto"
     install:
       - |
-        mkdir -p /rootfs/artifacts/arm64/u-boot/board
-        cp -v u-boot.bin /rootfs/artifacts/arm64/u-boot/board
+        mkdir -p /rootfs/artifacts/arm64/u-boot/roc-cc-rk3328
+        cp -v u-boot.bin /rootfs/artifacts/arm64/u-boot/roc-cc-rk3328
 finalize:
   - from: /rootfs
     to: /rootfs

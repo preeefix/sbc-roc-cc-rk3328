@@ -1,4 +1,4 @@
-module board
+module roc-cc-rk3328
 
 go 1.22.1
 
